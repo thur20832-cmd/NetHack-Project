@@ -9,28 +9,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Setup Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install Buildozer dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential git python3 python3-dev ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libgstreamer1.0-gstreamer-lite-dev libgstreamer1.0-plugins-base-dev
           pip install --upgrade pip
           pip install buildozer cython==0.29.33 kivy
 
-      - name: Run Buildozer
+      - name: Build APK with Buildozer
         run: |
           yes | buildozer android debug
         continue-on-error: false
 
-      - name: Upload Artifact
+      - name: Archive Production Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: NetHack-APK
+          name: NetHack-APK-Package
           path: bin/*.apk
-          
+
